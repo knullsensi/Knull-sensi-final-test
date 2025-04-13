@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knull-Sensi | Developers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            /* Dark Theme Defaults */
+            --primary: #ff0000;
+            --secondary: #000000;
+            --accent: #ffffff;
+            --dark: #0a0a0a;
+            --light: #f5f5f5;
+            --gray: #333333;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 0, 0, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --header-bg: rgba(0, 0, 0, 0.8);
+            --footer-bg: #111111;
+            --theme-toggle-bg: #222222;
+        }
+
+        .light-theme {
+            /* Light Theme */
+            --primary: #ff0000;
+            --secondary: #ffffff;
+            --accent: #000000;
+            --dark: #f0f0f0;
+            --light: #0a0a0a;
+            --gray: #e0e0e0;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --card-border: rgba(255, 0, 0, 0.3);
+            --text-primary: #000000;
+            --text-secondary: #444444;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --footer-bg: #f8f8f8;
+            --theme-toggle-bg: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--accent);
+            overflow-x: hidden;
+        }
+
+        /* Loading Animation */
+        .loading-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-circle {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: var(--accent);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .theme-switch {
+            display: none;
+        }
+
+        .theme-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 60px;
+            height: 30px;
+            background: var(--theme-toggle-bg);
+            border-radius: 50px;
+            padding: 5px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-label i {
+            font-size: 14px;
+            z-index: 2;
+        }
+
+        .theme-label .fa-moon {
+            color: #f1c40f;
+        }
+
+        .theme-label .fa-sun {
+            color: #f39c12;
+        }
+
+        .theme-ball {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            top: 4px;
+            left: 4px;
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+
+        .theme-switch:checked + .theme-label .theme-ball {
+            transform: translateX(30px);
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background-color: var(--header-bg);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo-text {
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .logo-sensi {
+            color: var(--primary);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px var(--accent), 0 0 10px var(--primary);
+            }
+            to {
+                text-shadow: 0 0 10px var(--accent), 0 0 20px var(--primary), 0 0 30px #ff3333;
+            }
+        }
+
+        .nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            animation: underline 0.3s ease-out;
+        }
+
+        @keyframes underline {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Contact Link Effect */
+        .contact-link {
+            position: relative;
+            overflow: hidden;
+            padding: 0.5rem 1rem;
+        }
+
+        .contact-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            z-index: 1;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-link:hover .contact-effect {
+            transform: translateY(0);
+        }
+
+        .contact-link:hover .contact-text {
+            color: var(--secondary);
+        }
+
+        /* Developers Page Specific Styles */
+        .developers-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 5% 50px;
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .developers-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .team-description {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .developers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 0 5% 5%;
+            perspective: 1000px;
+        }
+        
+        .developer-card-container {
+            perspective: 1000px;
+            height: 350px;
+        }
+        
+        .developer-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .developer-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255,0,0,0.2);
+            -webkit-backface-visibility: hidden;
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, var(--dark), var(--gray));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, var(--gray), var(--dark));
+            transform: rotateY(180deg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid var(--primary);
+        }
+        
+        .developer-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .developer-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .developer-role {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .developer-bio {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: var(--accent);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--footer-bg);
+            padding: 3rem 5%;
+            color: var(--text-secondary);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo p {
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h4, .footer-social h4 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .footer-links h4::after, .footer-social h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--accent);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            .nav ul {
+                gap: 1rem;
+            }
+            
+            .developers-title {
+                font-size: 2rem;
+            }
+            
+            .developer-card-container {
+                height: 300px;
+            }
+        }
+        /* Music Player Styles */
+.music-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 20px;
+}
+
+.music-btn {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.music-btn:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.music-btn::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    opacity: 0;
+}
+
+.music-btn.playing::after {
+    opacity: 0.5;
+}
+
+.music-status {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    70% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- Loading Animation 
+   <div class="loading-animation">
+        <div class="loading-circle"></div>
+        <div class="loading-text">LOADING DEVELOPERS...</div>
+    </div>-->
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch" class="theme-switch">
+        <label for="theme-switch" class="theme-label">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+            <span class="theme-ball"></span>
+        </label>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-text">KNULL-<span class="logo-sensi">SENSI</span></span>
+        </div>
+        <div class="music-player">
+            <audio id="bgMusic" loop>
+                <source src="finalsong.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <button id="musicToggle" class="music-btn">
+                <i class="fas fa-music"></i>
+            </button>
+            <span class="music-status">Now Playing</span>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="index.html" class="nav-link">HOME</a></li>
+                <li><a href="developers.html" class="nav-link active">DEVELOPERS</a></li>
+                <li><a href="contact.html" class="nav-link contact-link">
+                    <span class="contact-text">CONTACT</span>
+                    <span class="contact-effect"></span>
+                </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Developers Hero Section -->
+    <section class="developers-hero">
+        <h1 class="developers-title">THE DEVELOPMENT TEAM</h1>
+        <p class="team-description">
+            Meet the elite squad behind Knull-Sensi - a team of passionate gamers and tech enthusiasts 
+            dedicated to bringing you the ultimate Free Fire optimization experience. Each member brings 
+            unique expertise to create the perfect balance between performance and precision. Together, 
+            we've crafted tools that give players the competitive edge they need to dominate the battlefield.
+        </p>
+    </section>
+
+    <!-- Developers Grid -->
+    <div class="developers-grid">
+        <!-- KNULL -->
+        <div class="developer-card-container">
+            <div class="developer-card">
+                <div class="card-front">
+                    <img src="download (1).jpeg" alt="KNULL" class="developer-avatar">
+                    <h3 class="developer-name">KNULL</h3>
+                    <p class="developer-role">Project Leader</p>
+                </div>
+                <div class="card-back">
+                    <h3 class="developer-name">KNULL</h3>
+                    <p class="developer-bio">
+                        The mastermind behind the entire project, Knull oversees all operations and ensures 
+                        everything runs smoothly. With years of experience in game optimization and team 
+                        management, he coordinates between all team members to deliver the perfect product.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="https://discord.gg/4EtdH8fhF5"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AIZEN -->
+        <div class="developer-card-container">
+            <div class="developer-card">
+                <div class="card-front">
+                    <img src="vikas1.jpg" alt="AIZEN" class="developer-avatar">
+                    <h3 class="developer-name">AIZEN</h3>
+                    <p class="developer-role">Optimization Expert</p>
+                </div>
+                <div class="card-back">
+                    <h3 class="developer-name">AIZEN</h3>
+                    <p class="developer-bio">
+                        The optimization wizard who fine-tunes every setting to perfection. Aizen specializes 
+                        in squeezing out every last drop of performance from your system. His configs are 
+                        legendary in the competitive scene for their flawless execution.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEO -->
+        <div class="developer-card-container">
+            <div class="developer-card">
+                <div class="card-front">
+                    <img src="LEO.png" alt="LEO" class="developer-avatar">
+                    <h3 class="developer-name">LEO</h3>
+                    <p class="developer-role">Sensitivity Guru</p>
+                </div>
+                <div class="card-back">
+                    <h3 class="developer-name">LEO</h3>
+                    <p class="developer-bio">
+                        The sensitivity specialist with an almost supernatural understanding of aim mechanics. 
+                        Leo's sensitivity presets have transformed countless players from average to elite. 
+                        His configurations adapt perfectly to any playstyle or device.
+                    </p>
+                    <div class="social-links">
+                        <a href=""><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AKAZA -->
+        <div class="developer-card-container">
+            <div class="developer-card">
+                <div class="card-front">
+                    <img src="akaza.png" alt="AKAZA" class="developer-avatar">
+                    <h3 class="developer-name">AKAZA</h3>
+                    <p class="developer-role">Design Architect</p>
+                </div>
+                <div class="card-back">
+                    <h3 class="developer-name">AKAZA</h3>
+                    <p class="developer-bio">
+                        The creative force behind Knull-Sensi's visual identity. Akaza combines aesthetics 
+                        with functionality to create intuitive interfaces. His designs ensure our tools are 
+                        not only powerful but also a pleasure to use.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AIMBOT -->
+        <div class="developer-card-container">
+            <div class="developer-card">
+                <div class="card-front">
+                    <img src="SURYA.jpg" alt="AIMBOT" class="developer-avatar">
+                    <h3 class="developer-name">AIMBOT</h3>
+                    <p class="developer-role">Sensitivity Tester</p>
+                </div>
+                <div class="card-back">
+                    <h3 class="developer-name">AIMBOT</h3>
+                    <p class="developer-bio">
+                        The in-game testing specialist with reflexes that defy human limits. Aimbot rigorously 
+                        tests every sensitivity configuration in actual combat scenarios. His feedback ensures 
+                        our presets perform flawlessly under fire.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitch"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-text">KNULL-<span class="logo-sensi">SENSI</span></span>
+                <p>Ultimate Free Fire Optimization Solutions</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="developers.html">Developers</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Connect With Us</h4>
+                <div class="social-icons">
+                    <a href="https://discord.gg/4EtdH8fhF5" target="_blank"><i class="fab fa-discord"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a href="https://www.youtube.com/@RFFAKSHAY/videos" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/_knull_sensi/" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Knull-Sensi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle functionality
+            const themeSwitch = document.getElementById('theme-switch');
+            const body = document.body;
+            
+            // Check for saved theme preference or use preferred color scheme
+            const savedTheme = localStorage.getItem('theme') || 
+                              (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            
+            if (savedTheme === 'light') {
+                body.classList.add('light-theme');
+                themeSwitch.checked = true;
+            }
+            
+            themeSwitch.addEventListener('change', function() {
+                if (this.checked) {
+                    body.classList.add('light-theme');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.remove('light-theme');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+
+            // Loading animation
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const loading = document.querySelector('.loading-animation');
+                    if (loading) {
+                        loading.style.opacity = '0';
+                        setTimeout(function() {
+                            loading.style.display = 'none';
+                        }, 500);
+                    }
+                }, 1000);
+            });
+
+            // Card flipping functionality
+            const cardContainers = document.querySelectorAll('.developer-card-container');
+            
+            cardContainers.forEach(container => {
+                const card = container.querySelector('.developer-card');
+                
+                container.addEventListener('mouseenter', () => {
+                    card.classList.add('flipped');
+                });
+                
+                container.addEventListener('mouseleave', () => {
+                    card.classList.remove('flipped');
+                });
+            });
+        });
+
+        //Song Play
+        document.addEventListener('DOMContentLoaded', function() {
+    const music = document.getElementById('bgMusic');
+    const toggleBtn = document.getElementById('musicToggle');
+    const musicStatus = document.querySelector('.music-status');
+
+    // ⏪ Restore previous playback time
+    const savedTime = localStorage.getItem('bgMusicTime');
+    if (savedTime && !isNaN(savedTime)) {
+        music.currentTime = parseFloat(savedTime);
+    }
+
+    // ⏸️ Restore playback state
+    const wasPlaying = localStorage.getItem('bgMusicIsPlaying') === 'true';
+
+    if (wasPlaying) {
+        const playPromise = music.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                toggleBtn.classList.add('playing');
+                musicStatus.textContent = 'Now Playing';
+            }).catch(error => {
+                toggleBtn.classList.remove('playing');
+                musicStatus.textContent = 'Click to play';
+            });
+        }
+    } else {
+        music.pause();
+        toggleBtn.classList.remove('playing');
+        musicStatus.textContent = 'Paused';
+    }
+
+    // 🎛️ Toggle play/pause manually
+    toggleBtn.addEventListener('click', function() {
+        if (music.paused) {
+            music.play();
+            localStorage.setItem('bgMusicIsPlaying', 'true');
+        } else {
+            music.pause();
+            localStorage.setItem('bgMusicIsPlaying', 'false');
+        }
+    });
+
+    // 🔁 Save current time regularly
+    music.addEventListener('timeupdate', function() {
+        localStorage.setItem('bgMusicTime', music.currentTime);
+    });
+
+    // 📀 Sync UI on play/pause
+    music.addEventListener('play', function() {
+        toggleBtn.classList.add('playing');
+        musicStatus.textContent = 'Now Playing';
+        localStorage.setItem('bgMusicIsPlaying', 'true');
+    });
+
+    music.addEventListener('pause', function() {
+        toggleBtn.classList.remove('playing');
+        musicStatus.textContent = 'Paused';
+        localStorage.setItem('bgMusicIsPlaying', 'false');
+    });
+});
+    </script>
+</body>
+</html>

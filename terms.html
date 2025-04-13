@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms | Free Fire Sensi Hub</title>
+    <style>
+        :root {
+            /* Dark Theme */
+            --dark-bg: #0f0f12;
+            --dark-card: #1a1a24;
+            --dark-text: #e0e3ff;
+            --dark-accent: #ff2e4d;
+            --dark-secondary: #6c5ce7;
+            --dark-border: #2a2a3a;
+            
+            /* Light Theme */
+            --light-bg: #f5f7ff;
+            --light-card: #ffffff;
+            --light-text: #2d3436;
+            --light-accent: #ff4757;
+            --light-secondary: #6c5ce7;
+            --light-border: #dfe6e9;
+            
+            /* Current Theme (Defaults) */
+            --bg: var(--dark-bg);
+            --card: var(--dark-card);
+            --text: var(--dark-text);
+            --accent: var(--dark-accent);
+            --secondary: var(--dark-secondary);
+            --border: var(--dark-border);
+        }
+        
+        [data-theme="light"] {
+            --bg: var(--light-bg);
+            --card: var(--light-card);
+            --text: var(--light-text);
+            --accent: var(--light-accent);
+            --secondary: var(--light-secondary);
+            --border: var(--light-border);
+        }
+        
+        body {
+            font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+            background-image: radial-gradient(circle at 20% 30%, rgba(108, 92, 231, 0.1) 0%, transparent 25%),
+                            radial-gradient(circle at 80% 70%, rgba(255, 46, 77, 0.1) 0%, transparent 25%);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+        }
+        
+        h1 {
+            color: var(--accent);
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            color: var(--secondary);
+            margin-top: 2.5rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        p, li {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        ul {
+            padding-left: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            list-style-type: none;
+        }
+        
+        li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .last-updated {
+            text-align: right;
+            font-style: italic;
+            color: var(--secondary);
+            opacity: 0.8;
+            margin-top: 3rem;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1><span class="highlight">Terms</span> & Conditions</h1>
+        
+        <h2>1. Acceptance</h2>
+        <p>By using <span class="highlight">KNULL_SENSI</span>, you agree to these terms. If you disagree, please refrain from using our services.</p>
+        
+        <h2>2. Service Description</h2>
+        <p>We provide:</p>
+        <ul>
+            <li><span class="highlight">Optimized sensitivity settings</span> for Free Fire</li>
+            <li>Configuration files for enhanced gameplay</li>
+            <li>Device-specific optimization guides</li>
+            <li>Premium config packs with advanced settings</li>
+        </ul>
+        
+        <h2>3. Account Policy</h2>
+        <ul>
+            <li>Sharing accounts is <span class="highlight">strictly prohibited</span></li>
+            <li>You must be at least 13 years old to register</li>
+            <li>We reserve the right to terminate suspicious accounts</li>
+        </ul>
+        
+        <h2>4. Purchases</h2>
+        <ul>
+            <li>All sales are <span class="highlight">final</span> - no refunds after download (1YEAR SUPPORT)</li>
+            <li>Prices subject to change without notice</li>
+            <li>Chargebacks will result in permanent ban</li>
+        </ul>
+        
+        <h2>5. Prohibited Actions</h2>
+        <ul>
+            <li>Reverse engineering our config files</li>
+            <li>Reselling or redistributing our content</li>
+            <li>Using our settings for cheating purposes</li>
+            <li>Automated scraping of our database</li>
+        </ul>
+        
+        <h2>6. Disclaimer</h2>
+        <p>We don't guarantee:</p>
+        <ul>
+            <li>Improved rank or K/D ratio</li>
+            <li>Compatibility with all devices</li>
+            <li>Approval by Free Fire's anti-cheat system</li>
+        </ul>
+        
+        <h2>7. Modifications</h2>
+        <p>We may update these terms periodically. Continued use after changes constitutes acceptance.</p>
+        
+        <p class="last-updated">Last Updated: March 2025</p>
+        
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+    
+    <button class="theme-toggle" id="themeToggle">🌓</button>
+    
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', currentTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button emoji
+            themeToggle.textContent = newTheme === 'dark' ? '🌓' : '🌒';
+        });
+        
+        // Set initial button emoji
+        themeToggle.textContent = currentTheme === 'dark' ? '🌓' : '🌒';
+    </script>
+</body>
+</html>
